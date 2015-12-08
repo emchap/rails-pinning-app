@@ -10,8 +10,9 @@ Rails.application.routes.draw do
   resources :pins
   
   get '/library' => 'pins#index'
-  
 
+  get '/pins/show' => 'pins#new'
+  
   
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
