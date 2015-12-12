@@ -32,6 +32,15 @@ gem 'puma'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'rspec'
+gem 'rspec-rails'
+
+gem 'rails_12factor'
+
+gem "paperclip", :git => "git://github.com/thoughtbot/paperclip.git"
+
+gem 'aws-sdk', '< 2.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -43,11 +52,6 @@ group :development, :test do
   gem 'spring', '~>1.3.4'
   gem 'database_cleaner'
 end
-
-gem 'rspec'
-gem 'rspec-rails'
-
-gem 'rails_12factor'
 
 
 
