@@ -1,6 +1,107 @@
 require 'spec_helper'
 RSpec.describe PinsController do
 
+#PUT update test taken from https://github.com/tnataly/coder-pinterest/blob/ccd1232d3783debdc57b536525c0fa82289d4cc7/spec/controllers/pins_controller_spec.rb
+	
+  describe "PUT update" do  
+  		before (:all) do
+     		@pin = Pin.create(title: "Learn RUBY hard way", 
+      		url: "http://google.com", 
+      		text: "Some super text",
+        	slug: "ruby-hard",
+        	category_id: "ruby") 
+		end
+
+  	context "request to /pins with valid parameters" do
+		let(:attr) do
+        	{ :title => "Learn Rails", 
+          	:url => "New url",
+          	:text => "The new text",
+          	:slug => "ruby-hard"
+           }
+      	end      
+
+		before(:each) do
+        	put :update, :id => @pin.id, :pin => attr
+        	@pin.reload
+		end
+
+      it 'updates a pin' do
+        expect(@pin.title).to eql attr[:title] 
+        expect(@pin.url).to eql attr[:url]
+        expect(@pin.text).to eql attr[:text]
+        expect(@pin.slug).to eql attr[:slug]
+        #puts "===================\n" + response.body
+     end
+    
+      it 'redirects to the show view' do
+          expect(response).to redirect_to(pin_path(assigns(:pin)))
+      end
+    end
+
+    context "request to /pins with invalid parameters" do
+		let(:attr) do
+        	{ :title => "", 
+          	:url => "",
+          	:text => "The new text",
+          	:slug => "ruby-hard"
+           }
+      	end      
+
+
+
+		before(:each) do
+        	put :update, :id => @pin.id, :pin => attr
+        	@pin.reload
+		end
+
+		it "assigns an @errors instance variable" do
+			#puts "===================\n" + response.body
+			expect(assigns[:errors].present?).to be(true)
+		end
+
+		it "renders the edit view" do
+			#puts "===================\n" + response.body
+			expect(response).to render_template(:edit)
+		end
+	end
+
+  end
+
+	describe "GET edit" do
+    
+      before(:each) do
+        @pin = Pin.create(title: 'Test pin',
+          url: 'http://www.google.com',
+          text: 'Test text',
+          slug: 'test-pin-rspec',
+          category_id: 'ruby')
+      end
+      
+      after(:each) do
+      	pin = Pin.find_by_slug('test-pin-rspec')
+      	if pin.present?
+      	  pin.delete
+      	end
+      end
+    	
+      it 'renders the edit template' do
+	    get :edit, id: @pin.id
+	    expect(response).to render_template(:edit)
+      end
+	  
+      it 'assigns an instance variable to a new pin' do
+	    get :edit, id: @pin.id
+	    expect(assigns(:pin)).to eq(@pin)
+      end
+	  
+      it 'responds with success' do
+	    get :edit, id: @pin.id
+	    expect(response.success?).to be(true)
+      end
+	  
+	end
+	
 	describe "GET index" do
 		it 'renders the index template' do 
 			get :index
